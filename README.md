@@ -34,6 +34,14 @@ type (
 
 建议 go-zero 中都写上 optional
 
+## 配置
+
+```go
+type Conf struct {
+	ZhTrans bool `json:"zhTrans,optional,default=true"` // 是否开启中文, 默认中文
+}
+
+```
 
 ## 内置自定义校验
 
@@ -224,3 +232,34 @@ type (
 {0}为参数名称
 
 {1}为param即8-15
+
+
+## 注册自定义校验方式
+
+param-validator 暴漏了 RegisterValidation 和 RegisterTranslation 来注册自定义校验方法和错误返回消息。
+
+```go
+import (
+    params_validator "github.com/lerity-yao/param-validator"
+    regexp "github.com/dlclark/regexp2"
+    "github.com/go-playground/validator/v10"
+)
+
+// 自定义校验方法
+func xPhone(fl validator.FieldLevel) bool {
+	re := regexp.MustCompile(`^1\d{10}$`, regexp.None)
+	ok, err := re.MatchString(fl.Field().String())
+	if err != nil {
+		return false
+	}
+	return ok
+}
+
+func x() {
+    // 注册自定义校验方法
+    vd := params_validator.MustNewHttpxParseValidator(params_validator.Conf{ZhTrans: true})
+    vd.RegisterValidation("xPhone", xPhone))
+    vd.RegisterTranslation("xPhone", "{0}必须为手机号，1开头，长度为11位", false)
+    httpx.SetValidator(vd)
+}
+```
