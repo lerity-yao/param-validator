@@ -72,7 +72,7 @@ func xStr(fl validator.FieldLevel) bool {
 		return false
 	}
 
-	reg := `^\S.` + fmt.Sprintf("{%d,%d}", minNum, maxNum) + `\S$`
+	reg := `^(?!\s)(?!.*\s$)[\s\S]` + fmt.Sprintf("{%d,%d}", minNum, maxNum) + `$`
 	re := regexp.MustCompile(reg, regexp.None)
 	do, err := re.MatchString(fl.Field().String())
 	if err != nil {
