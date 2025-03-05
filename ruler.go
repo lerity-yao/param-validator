@@ -28,6 +28,9 @@ func baseLengthParam(fl validator.FieldLevel) (int, int, bool) {
 	if err != nil {
 		return 0, 0, false
 	}
+	if minNum == 0 {
+		return 0, 0, false
+	}
 
 	maxNum, err := strconv.Atoi(params[1])
 	if err != nil {
@@ -86,8 +89,8 @@ func xStrWithoutZh(fl validator.FieldLevel) bool {
 	if ok != true {
 		return false
 	}
-	reg := `^[^\s\p{Han}][a-zA-Z0-9\s!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]` +
-		fmt.Sprintf(`{%d,%d}$`, minNum, maxNum) + `[^\s\p{Han}]$`
+	reg := `^(?! )[^\u4e00-\u9fa5]` +
+		fmt.Sprintf(`{%d,%d}$`, minNum, maxNum) + `(?<! )$`
 	re := regexp.MustCompile(reg, regexp.None)
 	do, err := re.MatchString(fl.Field().String())
 	if err != nil {
@@ -101,8 +104,8 @@ func xStrWithoutZhAndSpec(fl validator.FieldLevel) bool {
 	if ok != true {
 		return false
 	}
-	reg := `^[a-zA-Z0-9][a-zA-Z0-9 ]` +
-		fmt.Sprintf(`{%d,%d}$`, minNum, maxNum) + `[a-zA-Z0-9]$`
+	reg := `(?! )[A-Za-z0-9 ]` +
+		fmt.Sprintf(`{%d,%d}$`, minNum, maxNum) + `(?<! )$`
 	re := regexp.MustCompile(reg, regexp.None)
 	do, err := re.MatchString(fl.Field().String())
 	if err != nil {
@@ -116,7 +119,7 @@ func xStrWithoutSpec(fl validator.FieldLevel) bool {
 	if ok != true {
 		return false
 	}
-	reg := `^[\p{L}\p{N}][\p{L}\p{N} ]` + fmt.Sprintf(`{%d,%d}$`, minNum, maxNum) + `[\p{L}\p{N}]$`
+	reg := `^(?! )[A-Za-z0-9\u4e00-\u9fa5 ]` + fmt.Sprintf(`{%d,%d}$`, minNum, maxNum) + `(?<! )$`
 	re := regexp.MustCompile(reg, regexp.None)
 	do, err := re.MatchString(fl.Field().String())
 	if err != nil {
@@ -130,7 +133,7 @@ func xStrWithoutSpecAndSpace(fl validator.FieldLevel) bool {
 	if ok != true {
 		return false
 	}
-	reg := `^[\p{L}\p{N}]` + fmt.Sprintf(`{%d,%d}$`, minNum, maxNum)
+	reg := `^[A-Za-z0-9\u4e00-\u9fa5]` + fmt.Sprintf(`{%d,%d}$`, minNum, maxNum)
 	re := regexp.MustCompile(reg, regexp.None)
 	do, err := re.MatchString(fl.Field().String())
 	if err != nil {
