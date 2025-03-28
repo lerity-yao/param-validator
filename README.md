@@ -233,6 +233,34 @@ type (
 
 {1}为param即8-15
 
+### xStrZhWithoutSpace
+
+只能是中文,两侧不能有空格
+
+使用方法为 validate:"xStrZhWithoutSpace=1-30" 代表字符串长度为 1-30位，左右都为闭区间
+长度自定义
+不能有空格
+不能包含特殊字符 !@#$%^&*()_+\-=[]{};':"\\|,.<>/?等
+只能是中文。
+
+```api
+type (
+	demo {
+        Name string `form:"name,optional" validate:"xStrZhWithoutSpace=8-15"` // 姓名
+    }
+)
+```
+
+返回错误为
+
+```text
+{0}长度{1}，不能有空格，只能是中文
+```
+
+{0}为参数名称
+
+{1}为param即8-15
+
 
 ## 注册自定义校验方式
 
