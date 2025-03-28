@@ -141,3 +141,18 @@ func xStrWithoutSpecAndSpace(fl validator.FieldLevel) bool {
 	}
 	return do
 }
+
+// xStrZhWithoutSpace 只允许中文,前后不允许空格
+func xStrZhWithoutSpace(fl validator.FieldLevel) bool {
+	minNum, maxNum, ok := baseLengthParam(fl)
+	if ok != true {
+		return false
+	}
+	reg := `^(?! )[\u4e00-\u9fa5]` + fmt.Sprintf(`{%d,%d}$`, minNum, maxNum)
+	re := regexp.MustCompile(reg, regexp.None)
+	do, err := re.MatchString(fl.Field().String())
+	if err != nil {
+		return false
+	}
+	return do
+}

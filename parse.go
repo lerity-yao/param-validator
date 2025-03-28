@@ -71,6 +71,10 @@ func (v *HttpxParseValidator) InitRegisterValidation() (err error) {
 	if err = v.xStrWithoutZhAndSpec(); err != nil {
 		return err
 	}
+	//只能是中文,并且二侧不能有空格
+	if err = v.xStrZhWithoutSpace(); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -176,6 +180,22 @@ func (v *HttpxParseValidator) xStrWithoutSpecAndSpace() error {
 		return err
 	}
 	if err := v.Validator.RegisterTranslation("xStrWithoutSpecAndSpace", "{0}长度{1}，不能有空格，不能包含特殊字符串", false); err != nil {
+		return err
+	}
+	return nil
+}
+
+// xStrZhWithoutSpace 注册自定义 xStrZhWithoutSpace 方法
+// xStrZhWithoutSpace 为字符串校验方法，使用方法为 validate:"xStrZhWithoutSpace=1-300" 代表字符串长度为 1-300位，左右都为闭区间
+// xStrZhWithoutSpace 长度自定义
+// xStrZhWithoutSpace 不能有空格
+// xStrZhWithoutSpace 不能包含特殊字符 !@#$%^&*()_+\-=[]{};':"\\|,.<>/?等
+// xStrZhWithoutSpace 只包含中文
+func (v *HttpxParseValidator) xStrZhWithoutSpace() error {
+	if err := v.Validator.RegisterValidation("xStrZhWithoutSpace", xStrZhWithoutSpace); err != nil {
+		return err
+	}
+	if err := v.Validator.RegisterTranslation("xStrZhWithoutSpace", "{0}长度{1}，不能有空格，只能是中文", false); err != nil {
 		return err
 	}
 	return nil
