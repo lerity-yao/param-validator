@@ -13,9 +13,10 @@ func main() {
 		Name2 string `json:"name2" validate:"xStrWithoutSpec=1-10"`
 		Name3 string `json:"name3" validate:"xStrWithoutSpecAndSpace=1-10"`
 		Name4 string `json:"name4" validate:"xStr=1-10"`
+		Name5 string `json:"name5" validate:"xStrZhWithoutSpace=1-3"`
 	}
 
-	s := S{Name: "1234567890", Name1: "z", Name2: "中国和中国和中国和", Name3: "te是st", Name4: "test"}
+	s := S{Name: "1234567890", Name1: "z", Name2: "中国和中国和中国和", Name3: "te是st", Name4: "test", Name5: "三个字"}
 
 	vd := params_validator.MustNewHttpxParseValidator(params_validator.Conf{ZhTrans: true})
 
