@@ -8,7 +8,9 @@ param-validator 集成了 github.com/go-playground/validator/v10，可以使用�
 
 ## 注意事项
 
-httpx会优先go-zero自带的校验。请注意，举个简单的例子
+- 内置自定义校验方法的最小长度必须大于0
+
+- httpx会优先go-zero自带的校验。请注意，举个简单的例子
 
 ```api
 type (
@@ -32,7 +34,7 @@ type (
 这种写法代表在 go-zero自带校验中，是不允许为空的，但是在param-validator中是允许为空，值不为空的时候，进行xPhone校验，
 会有冲突。
 
-建议 go-zero 中都写上 optional
+- 建议 go-zero 中都写上 optional
 
 ## 配置
 
